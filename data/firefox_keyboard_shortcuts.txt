@@ -1,0 +1,26 @@
+action, command1, command2, command3, command4, command5
+Select_Location_Bar, ctrl+L
+Back, ctrl+[, alt+left
+Forward, ctrl+]
+Home, alt+home
+Reload, ctrl+R, f5
+Reload_No_Cache, ctrl+f5, ctrl+shift+R
+Stop, esc
+New_Tab, ctrl+T
+New_Window, ctrl+N
+New_Private_Window, ctrl+shift+P
+Next_Tab, ctrl+tab, ctrl+pagedown
+Previous_Tab, ctrl+shift+tab, ctrl+pageup
+undo_close_tab, ctrl+shift+T
+undo_close_window, ctrl+shift+N
+select_tab_1, alt+1
+select_tab_2, alt+2
+select_tab_3, alt+3
+select_tab_4, alt+4
+select_tab_5, alt+5
+select_tab_6, alt+6
+select_tab_7, alt+7
+select_tab_8, alt+8
+select_last_tab, alt+9
+close_tab, ctrl+W, ctrl+f4
+close_window, ctrl+shift+W, alt+f4

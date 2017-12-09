@@ -1,0 +1,3 @@
+action, command1, command2, command3, command4, command5
+command_window, alt+f2
+list_applications, win+A
