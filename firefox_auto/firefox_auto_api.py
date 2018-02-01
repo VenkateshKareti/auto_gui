@@ -1,7 +1,7 @@
 import pyautogui
 
 pyautogui.FAILSAFE = True;
-pyautogui.PAUSE = 0.01;
+pyautogui.PAUSE = 2;
 
 
 def openLink(link = None):
