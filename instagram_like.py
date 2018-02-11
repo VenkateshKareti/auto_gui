@@ -138,19 +138,19 @@ while(True):
         continue;
 
 
-    # if(random.choice([True,False])):
-    #     # Start Browsing
-    #     ret_val = start_browsing_images(max_images = 10, fail_limit = 4);
-    #     if(ret_val == None or ret_val == False):
-    #         print("Browsing Error! Continuing");
-    #         continue;
+    if(random.choice([True,False])):
+        # Start Browsing
+        ret_val = start_browsing_images(max_images = 10, fail_limit = 4);
+        if(ret_val == None or ret_val == False):
+            print("Browsing Error! Continuing");
+            continue;
 
-    # else:
-    # Start Liking
-    ret_val = start_liking(max_images = 10, fail_limit = 4);
-    if(ret_val == None or ret_val == False):
-        print("Returned NONE!");
-        continue;
+    else:
+        # Start Liking
+        ret_val = start_liking(max_images = 10, fail_limit = 4);
+        if(ret_val == None or ret_val == False):
+            print("Returned NONE!");
+            continue;
 
 
     

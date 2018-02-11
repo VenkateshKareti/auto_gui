@@ -1,11 +1,12 @@
 import pyautogui
 import time
 import sys
+import datetime
 
 # sys.path.insert(0,'../');
 
-from firefox_auto import firefox_auto_api
-
+from firefox_auto import firefox_auto_api;
+from insta_auto import positionCache;
 
 pyautogui.FAILSAFE = True;
 pyautogui.PAUSE = 2;
@@ -36,12 +37,14 @@ def logScreenshot(fileName = "a.jpg"):
 
 
 # log message to log file
-def logMessage(fileName = "insta.log",msg = ""):
+def logMessage(fileName = "insta_auto_api.log",msg = ""):
+    global logMessageFileObj;
+    
+    T = str(datetime.datetime.now());
+    
     if(logMessageFileObj == None):
-        logMessageFileObj = open(fileName);
-        pass;
-
-    logMessageFileObj.write(msg);
+        logMessageFileObj = open(fileName,"a");
+    logMessageFileObj.write(T+"::"+msg+"\n");
         
 
 
@@ -122,16 +125,22 @@ def clickLatestPic():
         # go to home/start of page
         ret_val = firefox_auto_api.goToTopOfPage();
         if(ret_val == None or ret_val == False):
+            logMessage(msg = "Error: firefox api failed to go top of the page");
             return False;
 
         # go two pages down
         ret_val = firefox_auto_api.goPageDown(noOfPages = noOfPagesDownsForLatestPic);
         if(ret_val == None or ret_val == False):
+            logMessage(msg = "Error: firefox api failed to go down page for No.of pages :"+str(noOfPagesDownsForLatestPic));
             return False;
         
         # click on possible first image
-        pyautogui.click(firstLatestImageLocationX, firstLatestImageLocationY);
-        
+        try:
+            pyautogui.click(firstLatestImageLocationX, firstLatestImageLocationY);
+        except Exception as e:
+            logMessage(msg = "Error: pyautogui failed to click on first image, err:"+str(e));
+            return False;
+            
         # wait till the image loads
         count = 0;
         while(count < retryLimit):
@@ -143,9 +152,11 @@ def clickLatestPic():
             count += 1;
             
         if(count >= retryLimit):
+            logMessage(msg = "Error: Latest Image is not loaded after multiple tries");
             return False;
         
     except Exception as e:
+        logMessage(msg = "Error: unknown cause: "+str(e));
         return None;
     
     return True;
@@ -154,25 +165,29 @@ def clickLatestPic():
 
 
 
-nextIMG_positionCache = None;
+nextIMG_positionCache = positionCache.positionCache(img = nextImage_ICON);
 def isNextImage():
     global nextIMG_positionCache;
     try:
-        nextIMG_position = pyautogui.locateOnScreen(nextImage_ICON);
+        # nextIMG_position = pyautogui.locateOnScreen(nextImage_ICON);
+        nextIMG_position = nextIMG_positionCache.locateOnScreen(img = nextImage_ICON);
     except Exception as e:
+        logMessage(msg = "Error: pyautogui failed to locate next icon to confirm next Image; with err :"+str(e));
         return None;
     return nextIMG_position;
 
 
 
 
-prevIMG_positionCache = None;
+prevIMG_positionCache = positionCache.positionCache(img = prevImage_ICON);
 def isPrevImage():
     global prevIMG_positionCache;
     
     try:
-        prevIMG_position = pyautogui.locateOnScreen(prevImage_ICON);
+        # prevIMG_position = pyautogui.locateOnScreen(prevImage_ICON);
+        prevIMG_position = prevIMG_positionCache.locateOnScreen(img = prevImage_ICON);
     except Exception as e:
+        logMessage(msg = "Error: pyautogui failed to locate prev-icon to confirm prev image; with err :"+str(e));
         return None;
     return prevIMG_position;
     
@@ -180,23 +195,30 @@ def isPrevImage():
 
 
 
-like_positionCache = None;
+like_positionCache = positionCache.positionCache(img = likeImage_ICON);
 def likeImage():
     global like_positionCache;
     
     try:
         # get like icon position
-        like_position = pyautogui.locateOnScreen(likeImage_ICON);
+        # like_position = pyautogui.locateOnScreen(likeImage_ICON);
+        like_position = like_positionCache.locateOnScreen(img = likeImage_ICON);
         if(like_position == None):
-            # no like icon found
+            logMessage(msg = "Error: pyautogui failed to locate like icon");
             return False;
         else:
             # click like
-            pyautogui.click(like_position[0]+10, like_position[1]+10);
+            try:
+                pyautogui.click(like_position[0]+10, like_position[1]+10);
+            except Exception as e:
+                logMessage(msg = "Error: pyautogui failed to click like; with err :"+str(e));
+                return False;
             # confirm liked
             if(isLiked() == None or isLiked() == False):
+                logMessage(msg = "Error: clicking like did not work. like icon did not turn liked!");
                 return False;
     except Exception as e:
+        logMessage(msg = "Error: unknown error while liking image; with err :"+str(e));
         return None;
 
     return True;
@@ -204,15 +226,17 @@ def likeImage():
 
 
 
-liked_positionCache = None;
+liked_positionCache = positionCache.positionCache(img = likedImage_ICON);
 def isLiked():
     global liked_positionCache;
     
     try:
-        liked_position = pyautogui.locateOnScreen(likedImage_ICON);
+        # liked_position = pyautogui.locateOnScreen(likedImage_ICON);
+        liked_position = liked_positionCache.locateOnScreen(img = likedImage_ICON);
         if(liked_position == None):
             return False;
     except Exception as e:
+        logMessage(msg = "Error: pyautogui failed to locate liked icon with err :"+str(e));
         return None;
     
     return True;
@@ -220,18 +244,22 @@ def isLiked():
 
 
 
-nextIMG_positionCache = None;
+
 def nextImage():
     global nextIMG_positionCache;
     
     try:
-        nextIMG_position = pyautogui.locateOnScreen(nextImage_ICON);
+        # nextIMG_position = pyautogui.locateOnScreen(nextImage_ICON);
+        nextIMG_position = nextIMG_positionCache.locateOnScreen(img = nextImage_ICON);
         if(nextIMG_position == None):
+            logMessage(msg = "Error: pyautogui failed to locate next icon");
             return False;
         else:
             pyautogui.click(nextIMG_position[0]+5,nextIMG_position[1]+5);
     except Exception as e:
+        logMessage(msg = "Error: unknown error while locating next icon with err :"+str(e));
         return None;
+    
     return True;
 
 
@@ -242,6 +270,7 @@ def nextImage():
 
 def getHashTagLink(tag = None):
     if(tag == None):
+        logMessage(msg = "Error: no tag passed to generate instagram hash-tag link");
         return None;
     
     link = "https://www.instagram.com/explore/tags/"+tag+"/";
